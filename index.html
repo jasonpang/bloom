@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ebony</title>
+    <link rel="stylesheet" href="assets/stylesheets/common/fonts/medium-fonts.css">
+    <link rel="stylesheet" href="assets/stylesheets/common/bootstrap/bootstrap-grid.css">
+    <link rel="stylesheet" href="assets/stylesheets/editor/editor.css">
+    <link rel="stylesheet" href="assets/combined/codemirror/lib/codemirror.css">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse" id="navigation">
+    <a class="navbar-brand" href="#"></a>
+    <ul class="nav nav-pills pull-right">
+        <li class="nav-item active">
+            <a class="nav-link" href="#"></a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <textarea id="editor"></textarea>
+        </div>
+        <div class="col-md-6">
+            Preview
+        </div>
+    </div>
+</div>
+
+<script src="assets/javascript/common/jquery/jquery.min.js"></script>
+<script src="assets/javascript/common/bootstrap/bootstrap.min.js"></script>
+<script src="assets/combined/codemirror/lib/codemirror.js"></script>
+<script src="assets/combined/codemirror/mode/stex/stex.js"></script>
+<script src="assets/combined/codemirror/addon/edit/matchbrackets.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.14/require.min.js" type="text/javascript"></script>
+<script src="assets/javascript/zmidi/zMIDI.js"></script>
+<script src="assets/javascript/zmidi/zMIDIEvent.js"></script>
+<script src="assets/javascript/zmidi/MIDINotes.js"></script>
+<script src="assets/javascript/zmidi/SysexBuffer.js"></script>
+<script src="assets/javascript/webmidi/webmidi.js"></script>
+<script>
+    var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+        lineNumbers: true,
+        fixedGutter: true,
+        matchBrackets: true,
+        indentUnit: 4,
+        tabSize: 4,
+        indentWithTabs: true,
+        mode: 'stex',
+    });
+    window.webMidi = new WebMidi( {
+        safeMode: false
+    });
+    $(webMidi).on('noteOn', function(jqueryEvent, event) {
+        console.log('Note On: ', event);
+    });
+    $(webMidi).on('noteOff', function(jqueryEvent, event) {
+        console.log('Note Off: ', event);
+    });
+    $(webMidi).on('cc', function(jqueryEvent, event) {
+        console.log('CC: ', event);
+    });
+</script>
+</body>
+</html>
