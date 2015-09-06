@@ -19,11 +19,20 @@ class @WebMidi
 
   class WebMidi::Event
     constructor: (type, value, note, octave, velocity) ->
-      @type = type ? @EventType.Undefined
+      @type = type ? WebMidi::EventType.Undefined
       @value = value ? -1
       @note = note ? ''
       @octave = octave ? -1
       @velocity = velocity ? -1
+      @at = window.performance.now()
+
+    toString: ->
+      if @type == WebMidi::EventType.NoteOn || @type == WebMidi::EventType.NoteOff
+        return "#{@type}: #{@note}#{@octave} (#{@value}), Velocity #{@velocity} @ #{@at} ms"
+      else if @type == WebMidi::EventType.CC
+        return "#{@type}: #{@value} @ #{@at}"
+      else
+        return super.toString()
 
   log: (text) ->
     console.log("WebMIDI: #{text}")
@@ -81,5 +90,5 @@ class @WebMidi
         note = new @Event(@EventType.NoteOff, event.value, pitch.note, pitch.octave, event.velocity)
         $(@).trigger('noteOff', note)
       when @zmidiEvent.CONTROL_CHANGE
-        note = new @Event(@EventType.CC, undefined, undefined, undefined, event.velocity)
+        note = new @Event(@EventType.CC, event.value, undefined, undefined, undefined)
         $(@).trigger('cc', note)

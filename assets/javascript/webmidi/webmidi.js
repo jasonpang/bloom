@@ -22,12 +22,23 @@
 
     WebMidi.prototype.Event = (function() {
       function Event(type, value, note, octave, velocity) {
-        this.type = type != null ? type : this.EventType.Undefined;
+        this.type = type != null ? type : WebMidi.prototype.EventType.Undefined;
         this.value = value != null ? value : -1;
         this.note = note != null ? note : '';
         this.octave = octave != null ? octave : -1;
         this.velocity = velocity != null ? velocity : -1;
+        this.at = window.performance.now();
       }
+
+      Event.prototype.toString = function() {
+        if (this.type === WebMidi.prototype.EventType.NoteOn || this.type === WebMidi.prototype.EventType.NoteOff) {
+          return this.type + ": " + this.note + this.octave + " (" + this.value + "), Velocity " + this.velocity + " @ " + this.at + " ms";
+        } else if (this.type === WebMidi.prototype.EventType.CC) {
+          return this.type + ": " + this.value + " @ " + this.at;
+        } else {
+          return Event.__super__.toString.apply(this, arguments).toString();
+        }
+      };
 
       return Event;
 
@@ -115,7 +126,7 @@
           note = new this.Event(this.EventType.NoteOff, event.value, pitch.note, pitch.octave, event.velocity);
           return $(this).trigger('noteOff', note);
         case this.zmidiEvent.CONTROL_CHANGE:
-          note = new this.Event(this.EventType.CC, void 0, void 0, void 0, event.velocity);
+          note = new this.Event(this.EventType.CC, event.value, void 0, void 0, void 0);
           return $(this).trigger('cc', note);
       }
     };
