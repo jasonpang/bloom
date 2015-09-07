@@ -10,8 +10,7 @@ class @MidiTrack
     HighestNoteValue: 108
   }
 
-  constructor: (midiIo, name, timeSignatureBeats, timeSignatureBar, bpm, options = {}) ->
-    @midiIo = midiIo
+  constructor: (name, timeSignatureBeats, timeSignatureBar, bpm, options = {}) ->
     @name = name ? 'Unnamed Track'
     @state = MidiTrack::RecordState.Initialized
     @timeSignatureBeats = timeSignatureBeats ? -1
@@ -22,10 +21,12 @@ class @MidiTrack
     @bpm = bpm
     @canRecord = true
     @options = options
-    @notes = []
-    @noteEventStack = []
+    @notes = {} # Timestamp -> MidiNote / MidiChord
+    @noteEventMap = {} # Timestamp -> MidiIo::Event
+    @noteEventList = [] # Temporary queue to store NoteOn and subsequent NoteOff event; each slot cleared after NoteOff
+    @orderedTimestampList = [] # Ordered list of timestamps
     for index in [MidiTrack.Vars.LowestNoteValue .. MidiTrack.Vars.HighestNoteValue]
-      @noteEventStack.push []
+      @noteEventList.push []
 
 
   startRecording: ->
@@ -42,34 +43,36 @@ class @MidiTrack
 
   recordEvent: (midiIoEvent) ->
     # Each depressed note must be lifted before the same note can be re-triggered
-    if midiIoEvent.type == @midiIo.EventType.NoteOn
-      @noteEventStack[midiIoEvent.value].push(midiIoEvent)
-    else if midiIoEvent.type == @midiIo.EventType.NoteOff
-      noteOnEvent = @noteEventStack[midiIoEvent.value].pop()
+    if midiIoEvent.type == MidiIo.EventType.NoteOn
+      @noteEventList[midiIoEvent.value].push(midiIoEvent)
+      @noteEventMap[midiIoEvent.occurred] = midiIoEvent
+      @orderedTimestampList.push(midiIoEvent.occurred)
+    else if midiIoEvent.type == MidiIo.EventType.NoteOff
+      noteOnEvent = @noteEventList[midiIoEvent.value].pop()
       noteOffEvent = midiIoEvent
-      @notes.push(new MidiNote(
+      @notes[noteOnEvent.occurred] = new MidiNote(
         noteOnEvent.value,
         noteOnEvent.note,
         noteOnEvent.octave,
         noteOnEvent.velocity,
-        noteOnEvent.at,
-        noteOffEvent.at - noteOnEvent.at
-      ))
+        noteOnEvent.occurred,
+        noteOffEvent.occurred - noteOnEvent.occurred,
+      )
 
-  toJson: ->
+  save: ->
     JSON.stringify(@)
 
-  @fromJson: (jsonString) ->
+  @restore: (jsonString) ->
     JSON.parse(jsonString)
 
 
 class @MidiNote
-  constructor: (value, note, octave, velocity, at, duration) ->
+  constructor: (value, note, octave, velocity, occurred, duration) ->
     @value = value ? -1
     @note = note ? ''
     @octave = octave ? -1
     @velocity = velocity ? -1
-    @at = at
+    @occurred = occurred
     @duration = duration
 
   toString: ->

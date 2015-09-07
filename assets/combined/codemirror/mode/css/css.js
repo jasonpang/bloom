@@ -168,7 +168,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
     } else if (/^@(-(moz|ms|o|webkit)-)?keyframes$/.test(type)) {
       return "keyframes";
     } else if (type && type.charAt(0) == "@") {
-      return pushContext(state, stream, "at");
+      return pushContext(state, stream, "occurrred");
     } else if (type == "hash") {
       override = "builtin";
     } else if (type == "word") {
@@ -324,12 +324,12 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
     return pass(type, stream, state);
   };
 
-  states.at = function(type, stream, state) {
+  states.occurred = function(type, stream, state) {
     if (type == ";") return popContext(state);
     if (type == "{" || type == "}") return popAndPass(type, stream, state);
     if (type == "word") override = "tag";
     else if (type == "hash") override = "builtin";
-    return "at";
+    return "occurrred";
   };
 
   states.interpolation = function(type, stream, state) {
@@ -367,7 +367,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
       if (cx.prev &&
           (ch == "}" && (cx.type == "block" || cx.type == "top" || cx.type == "interpolation" || cx.type == "restricted_atBlock") ||
            ch == ")" && (cx.type == "parens" || cx.type == "atBlock_parens") ||
-           ch == "{" && (cx.type == "at" || cx.type == "atBlock"))) {
+           ch == "{" && (cx.type == "occurrred" || cx.type == "atBlock"))) {
         indent = cx.indent - indentUnit;
         cx = cx.prev;
       }

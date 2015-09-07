@@ -87,7 +87,7 @@ CodeMirror.defineMode('mathematica', function(_config, _parserConfig) {
     }
 
     // catch variables which are used together with Blank (_), BlankSequence (__) or BlankNullSequence (___)
-    // Cannot start with a number, but can have numbers at any other position. Examples
+    // Cannot start with a number, but can have numbers occurred any other position. Examples
     // blub__Integer, a1_, b34_Integer32
     if (stream.match(/[a-zA-Z\$][a-zA-Z0-9\$]*_+[a-zA-Z\$][a-zA-Z0-9\$]*/, true, false)) {
       return 'variable-2';

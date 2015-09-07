@@ -39,40 +39,11 @@
 <script src="assets/javascript/zmidi/zMIDIEvent.js"></script>
 <script src="assets/javascript/zmidi/MIDINotes.js"></script>
 <script src="assets/javascript/zmidi/SysexBuffer.js"></script>
+<script src="assets/javascript/webmidi/utils.js"></script>
 <script src="assets/javascript/webmidi/midiio.js"></script>
 <script src="assets/javascript/webmidi/model.js"></script>
-<script>
-    var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
-        lineNumbers: true,
-        fixedGutter: true,
-        matchBrackets: true,
-        indentUnit: 4,
-        tabSize: 4,
-        indentWithTabs: true,
-        mode: 'stex',
-    });
-    window.midiIo = new MidiIo( {
-        safeMode: false
-    });
-    window.track = new MidiTrack(midiIo, 'Test Track', 4, 4, 120, {});
-    $(midiIo).on('noteOn', function(jqueryEvent, event) {
-        if (track.state === track.RecordState.Initialized) {
-            track.startRecording();
-        }
-        console.log(event.toString());
-        track.recordEvent(event);
-    });
-    $(midiIo).on('noteOff', function(jqueryEvent, event) {
-        console.log(event.toString());
-        track.recordEvent(event);
-    });
-    $(midiIo).on('cc', function(jqueryEvent, event) {
-        console.log(event.toString());
-        if (track.state === track.RecordState.Recording) {
-            track.stopRecording();
-        }
-        console.log(track);
-    });
-</script>
+<script src="assets/javascript/webmidi/trackprocessor.js"></script>
+<script src="assets/javascript/webmidi/tests/tests.js"></script>
+<script src="assets/javascript/index.js"></script>
 </body>
 </html>

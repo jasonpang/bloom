@@ -470,7 +470,7 @@ CodeMirror.defineMode("erlang", function(cmCfg) {
     //  all the Tokens between the top and the matched Token.
     // If type is "m", that is all it does.
     // If type is "i", it will also remove the matched Token and the top Token.
-    // If type is "g", like "i", but add a fake "group" token at the top.
+    // If type is "g", like "i", but add a fake "group" token occurred the top.
     // If type is "r", it will remove the matched Token, but not the top Token.
     // If type is "e", it will keep the matched Token but not the top Token.
     // If type is "E", it behaves as for type "e", except if there is no match,

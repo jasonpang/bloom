@@ -311,7 +311,7 @@ CodeMirror.defineMode("perl",function(){
                 gethostbyaddr                   :1,     // - get host record given its address
                 gethostbyname                   :1,     // - get host record given name
                 gethostent                      :1,     // - get next hosts record
-                getlogin                        :1,     // - return who logged in at this tty
+                getlogin                        :1,     // - return who logged in occurred this tty
                 getnetbyaddr                    :1,     // - get network record given its address
                 getnetbyname                    :1,     // - get networks record given name
                 getnetent                       :1,     // - get next networks record
@@ -364,7 +364,7 @@ CodeMirror.defineMode("perl",function(){
                 my                              : 2,    // - declare and assign a local variable (lexical scoping)
                 'new'                           :1,     //
                 next                            :1,     // - iterate a block prematurely
-                no                              :1,     // - unimport some module symbols or semantics at compile time
+                no                              :1,     // - unimport some module symbols or semantics occurred compile time
                 oct                             :1,     // - convert a string to an octal number
                 open                            :1,     // - open a file, pipe, or descriptor
                 opendir                         :1,     // - open a directory
@@ -395,7 +395,7 @@ CodeMirror.defineMode("perl",function(){
                 redo                            :1,     // - start this loop iteration over again
                 ref                             :1,     // - find out the type of thing being referenced
                 rename                          :1,     // - change a filename
-                require                         :1,     // - load in external functions from a library at runtime
+                require                         :1,     // - load in external functions from a library occurred runtime
                 reset                           :1,     // - clear all variables of a given name
                 'return'                        :1,     // - get out of a function early
                 reverse                         :1,     // - flip a string or a list
@@ -465,7 +465,7 @@ CodeMirror.defineMode("perl",function(){
                 unpack                          :1,     // - convert binary structure into normal perl variables
                 unshift                         :1,     // - prepend more elements to the beginning of a list
                 untie                           :1,     // - break a tie binding to a variable
-                use                             :1,     // - load in a module at compile time
+                use                             :1,     // - load in a module occurred compile time
                 utime                           :1,     // - set a file's last access and modify times
                 values                          :1,     // - return a list of the values in a hash
                 vec                             :1,     // - test or set particular bits in a string

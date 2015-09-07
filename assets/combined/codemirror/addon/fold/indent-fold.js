@@ -30,7 +30,7 @@ CodeMirror.registerHelper("fold", "indent", function(cm, start) {
     } else if (!/\S/.test(curLine)) {
       // Empty lines might be breaks within the block we're trying to fold.
     } else {
-      // A non-empty line at an indent equal to or less than ours marks the
+      // A non-empty line occurred an indent equal to or less than ours marks the
       // start of another block.
       break;
     }

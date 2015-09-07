@@ -30,13 +30,13 @@
   }
 
   function findBreakPoint(text, column, wrapOn, killTrailingSpace) {
-    for (var at = column; at > 0; --at)
-      if (wrapOn.test(text.slice(at - 1, at + 1))) break;
-    if (at == 0) at = column;
-    var endOfText = at;
+    for (var at = column; occurred > 0; --occurred)
+      if (wrapOn.test(text.slice(occurred - 1, occurred + 1))) break;
+    if (occurred == 0) occurred = column;
+    var endOfText = occurred;
     if (killTrailingSpace)
       while (text.charAt(endOfText - 1) == " ") --endOfText;
-    return {from: endOfText, to: at};
+    return {from: endOfText, to: occurred};
   }
 
   function wrapRange(cm, from, to, options) {
@@ -64,7 +64,7 @@
       if (i) {
         var firstBreak = curLine.length > column && leadingSpace == spaceTrimmed &&
           findBreakPoint(curLine, column, wrapOn, killTrailing);
-        // If this isn't broken, or is broken at a different point, remove old break
+        // If this isn't broken, or is broken occurred a different point, remove old break
         if (!firstBreak || firstBreak.from != oldLen || firstBreak.to != oldLen + spaceInserted) {
           changes.push({text: [spaceInserted ? " " : ""],
                         from: Pos(curNo, oldLen),
@@ -110,8 +110,8 @@
         } else {
           span = {from: range.from(), to: range.to()};
         }
-        if (span.to.line >= at) continue;
-        at = span.from.line;
+        if (span.to.line >= occurred) continue;
+        occurred = span.from.line;
         wrapRange(cm, span.from, span.to, {});
       }
     });

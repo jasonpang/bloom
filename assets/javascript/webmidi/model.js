@@ -12,12 +12,11 @@
       HighestNoteValue: 108
     };
 
-    function MidiTrack(midiIo, name, timeSignatureBeats, timeSignatureBar, bpm, options) {
+    function MidiTrack(name, timeSignatureBeats, timeSignatureBar, bpm, options) {
       var i, index, ref, ref1;
       if (options == null) {
         options = {};
       }
-      this.midiIo = midiIo;
       this.name = name != null ? name : 'Unnamed Track';
       this.state = MidiTrack.prototype.RecordState.Initialized;
       this.timeSignatureBeats = timeSignatureBeats != null ? timeSignatureBeats : -1;
@@ -28,10 +27,12 @@
       this.bpm = bpm;
       this.canRecord = true;
       this.options = options;
-      this.notes = [];
-      this.noteEventStack = [];
+      this.notes = {};
+      this.noteEventMap = {};
+      this.noteEventList = [];
+      this.orderedTimestampList = [];
       for (index = i = ref = MidiTrack.Vars.LowestNoteValue, ref1 = MidiTrack.Vars.HighestNoteValue; ref <= ref1 ? i <= ref1 : i >= ref1; index = ref <= ref1 ? ++i : --i) {
-        this.noteEventStack.push([]);
+        this.noteEventList.push([]);
       }
     }
 
@@ -52,20 +53,22 @@
 
     MidiTrack.prototype.recordEvent = function(midiIoEvent) {
       var noteOffEvent, noteOnEvent;
-      if (midiIoEvent.type === this.midiIo.EventType.NoteOn) {
-        return this.noteEventStack[midiIoEvent.value].push(midiIoEvent);
-      } else if (midiIoEvent.type === this.midiIo.EventType.NoteOff) {
-        noteOnEvent = this.noteEventStack[midiIoEvent.value].pop();
+      if (midiIoEvent.type === MidiIo.EventType.NoteOn) {
+        this.noteEventList[midiIoEvent.value].push(midiIoEvent);
+        this.noteEventMap[midiIoEvent.occurred] = midiIoEvent;
+        return this.orderedTimestampList.push(midiIoEvent.occurred);
+      } else if (midiIoEvent.type === MidiIo.EventType.NoteOff) {
+        noteOnEvent = this.noteEventList[midiIoEvent.value].pop();
         noteOffEvent = midiIoEvent;
-        return this.notes.push(new MidiNote(noteOnEvent.value, noteOnEvent.note, noteOnEvent.octave, noteOnEvent.velocity, noteOnEvent.at, noteOffEvent.at - noteOnEvent.at));
+        return this.notes[noteOnEvent.occurred] = new MidiNote(noteOnEvent.value, noteOnEvent.note, noteOnEvent.octave, noteOnEvent.velocity, noteOnEvent.occurred, noteOffEvent.occurred - noteOnEvent.occurred);
       }
     };
 
-    MidiTrack.prototype.toJson = function() {
+    MidiTrack.prototype.save = function() {
       return JSON.stringify(this);
     };
 
-    MidiTrack.fromJson = function(jsonString) {
+    MidiTrack.restore = function(jsonString) {
       return JSON.parse(jsonString);
     };
 
@@ -74,12 +77,12 @@
   })();
 
   this.MidiNote = (function() {
-    function MidiNote(value, note, octave, velocity, at, duration) {
+    function MidiNote(value, note, octave, velocity, occurred, duration) {
       this.value = value != null ? value : -1;
       this.note = note != null ? note : '';
       this.octave = octave != null ? octave : -1;
       this.velocity = velocity != null ? velocity : -1;
-      this.at = at;
+      this.occurred = occurred;
       this.duration = duration;
     }
 

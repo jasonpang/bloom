@@ -3,7 +3,7 @@
   var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.MidiIo = (function() {
-    MidiIo.prototype.Status = {
+    MidiIo.Status = {
       Initializing: 'Initializing MIDI...',
       NotSupported: 'Web MIDI is not supported in this browser.',
       ConnectionFailed: 'Could not connect to MIDI peripherals.',
@@ -11,7 +11,7 @@
       Receiving: 'Actively receiving MIDI messages.'
     };
 
-    MidiIo.prototype.EventType = {
+    MidiIo.EventType = {
       Undefined: 'Undefined Event',
       NoteOn: 'Note On',
       NoteOff: 'Note Off',
@@ -22,19 +22,19 @@
 
     MidiIo.prototype.Event = (function() {
       function Event(type, value, note, octave, velocity) {
-        this.type = type != null ? type : MidiIo.prototype.EventType.Undefined;
+        this.type = type != null ? type : MidiIo.EventType.Undefined;
         this.value = value != null ? value : -1;
         this.note = note != null ? note : '';
         this.octave = octave != null ? octave : -1;
         this.velocity = velocity != null ? velocity : -1;
-        this.at = window.performance.timing.navigationStart + window.performance.now();
+        this.occurred = window.performance.timing.navigationStart + window.performance.now();
       }
 
       Event.prototype.toString = function() {
-        if (this.type === MidiIo.prototype.EventType.NoteOn || this.type === MidiIo.prototype.EventType.NoteOff) {
-          return this.type + ": " + this.note + this.octave + " (" + this.value + "), Velocity " + this.velocity + " @ " + this.at + " ms";
-        } else if (this.type === MidiIo.prototype.EventType.CC) {
-          return this.type + ": " + this.value + " @ " + this.at;
+        if (this.type === MidiIo.EventType.NoteOn || this.type === MidiIo.EventType.NoteOff) {
+          return this.type + ": " + this.note + this.octave + " (" + this.value + "), Velocity " + this.velocity + " @ " + this.occurred + " ms";
+        } else if (this.type === MidiIo.EventType.CC) {
+          return this.type + ": " + this.value + " @ " + this.occurred;
         } else {
           return Event.__super__.toString.apply(this, arguments).toString();
         }
@@ -45,7 +45,9 @@
     })();
 
     MidiIo.prototype.log = function(text) {
-      return console.log("WebMIDI: " + text);
+      if (this.options.logging) {
+        return console.log("WebMIDI: " + text);
+      }
     };
 
     function MidiIo(options) {
@@ -67,7 +69,7 @@
           _this.zmidi = zMIDI;
           _this.zmidiEvent = zMIDIEvent;
           _this.midiNotes = MIDINotes;
-          _this.status = _this.Status.Initializing;
+          _this.status = MidiIo.Status.Initializing;
           if (!_this.zmidi.isSupported()) {
             _this.onNotSupported;
           }
@@ -77,13 +79,13 @@
     }
 
     MidiIo.prototype.onNotSupported = function() {
-      this.status = this.Status.NotSupported;
+      this.status = MidiIo.Status.NotSupported;
       this.log("Status Change: " + this.status);
       return $(this).trigger('notSupported');
     };
 
     MidiIo.prototype.onConnectSuccess = function() {
-      this.status = this.Status.Connected;
+      this.status = MidiIo.Status.Connected;
       this.log("Status Change: " + this.status);
       $(this).trigger('connectionSuccessful');
       return this.addMessageEventHandlers();
@@ -119,14 +121,14 @@
       switch (event.type) {
         case this.zmidiEvent.NOTE_ON:
           pitch = this.midiNotes.getPitchByNoteNumber(event.value);
-          note = new this.Event(this.EventType.NoteOn, event.value, pitch.note, pitch.octave, event.velocity);
+          note = new this.Event(MidiIo.EventType.NoteOn, event.value, pitch.note, pitch.octave, event.velocity);
           return $(this).trigger('noteOn', note);
         case this.zmidiEvent.NOTE_OFF:
           pitch = this.midiNotes.getPitchByNoteNumber(event.value);
-          note = new this.Event(this.EventType.NoteOff, event.value, pitch.note, pitch.octave, event.velocity);
+          note = new this.Event(MidiIo.EventType.NoteOff, event.value, pitch.note, pitch.octave, event.velocity);
           return $(this).trigger('noteOff', note);
         case this.zmidiEvent.CONTROL_CHANGE:
-          note = new this.Event(this.EventType.CC, event.value, void 0, void 0, void 0);
+          note = new this.Event(MidiIo.EventType.CC, event.value, void 0, void 0, void 0);
           return $(this).trigger('cc', note);
       }
     };

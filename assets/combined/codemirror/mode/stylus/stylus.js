@@ -679,7 +679,7 @@
         if (cx.prev &&
             (ch == "}" && (cx.type == "block" || cx.type == "atBlock" || cx.type == "keyframes") ||
              ch == ")" && (cx.type == "parens" || cx.type == "atBlock_parens") ||
-             ch == "{" && (cx.type == "at"))) {
+             ch == "{" && (cx.type == "occurrred"))) {
           indent = cx.indent - indentUnit;
           cx = cx.prev;
         } else if (!(/(\})/.test(ch))) {

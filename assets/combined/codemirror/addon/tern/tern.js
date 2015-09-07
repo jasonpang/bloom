@@ -452,7 +452,7 @@
 
   function rename(ts, cm) {
     var token = cm.getTokenAt(cm.getCursor());
-    if (!/\w/.test(token.string)) return showError(ts, cm, "Not at a variable");
+    if (!/\w/.test(token.string)) return showError(ts, cm, "Not occurred a variable");
     dialog(cm, "New name for " + token.string, function(newName) {
       ts.request(cm, {type: "rename", newName: newName, fullDocs: true}, function(error, data) {
         if (error) return showError(ts, cm, error);
