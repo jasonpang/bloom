@@ -2,8 +2,8 @@
 (function() {
   var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  this.WebMidi = (function() {
-    WebMidi.prototype.Status = {
+  this.MidiIo = (function() {
+    MidiIo.prototype.Status = {
       Initializing: 'Initializing MIDI...',
       NotSupported: 'Web MIDI is not supported in this browser.',
       ConnectionFailed: 'Could not connect to MIDI peripherals.',
@@ -11,7 +11,7 @@
       Receiving: 'Actively receiving MIDI messages.'
     };
 
-    WebMidi.prototype.EventType = {
+    MidiIo.prototype.EventType = {
       Undefined: 'Undefined Event',
       NoteOn: 'Note On',
       NoteOff: 'Note Off',
@@ -20,20 +20,20 @@
       SysEx: 'SysEx'
     };
 
-    WebMidi.prototype.Event = (function() {
+    MidiIo.prototype.Event = (function() {
       function Event(type, value, note, octave, velocity) {
-        this.type = type != null ? type : WebMidi.prototype.EventType.Undefined;
+        this.type = type != null ? type : MidiIo.prototype.EventType.Undefined;
         this.value = value != null ? value : -1;
         this.note = note != null ? note : '';
         this.octave = octave != null ? octave : -1;
         this.velocity = velocity != null ? velocity : -1;
-        this.at = window.performance.now();
+        this.at = window.performance.timing.navigationStart + window.performance.now();
       }
 
       Event.prototype.toString = function() {
-        if (this.type === WebMidi.prototype.EventType.NoteOn || this.type === WebMidi.prototype.EventType.NoteOff) {
+        if (this.type === MidiIo.prototype.EventType.NoteOn || this.type === MidiIo.prototype.EventType.NoteOff) {
           return this.type + ": " + this.note + this.octave + " (" + this.value + "), Velocity " + this.velocity + " @ " + this.at + " ms";
-        } else if (this.type === WebMidi.prototype.EventType.CC) {
+        } else if (this.type === MidiIo.prototype.EventType.CC) {
           return this.type + ": " + this.value + " @ " + this.at;
         } else {
           return Event.__super__.toString.apply(this, arguments).toString();
@@ -44,11 +44,11 @@
 
     })();
 
-    WebMidi.prototype.log = function(text) {
+    MidiIo.prototype.log = function(text) {
       return console.log("WebMIDI: " + text);
     };
 
-    function WebMidi(options) {
+    function MidiIo(options) {
       if (options == null) {
         options = {};
       }
@@ -76,26 +76,26 @@
       })(this));
     }
 
-    WebMidi.prototype.onNotSupported = function() {
+    MidiIo.prototype.onNotSupported = function() {
       this.status = this.Status.NotSupported;
       this.log("Status Change: " + this.status);
       return $(this).trigger('notSupported');
     };
 
-    WebMidi.prototype.onConnectSuccess = function() {
+    MidiIo.prototype.onConnectSuccess = function() {
       this.status = this.Status.Connected;
       this.log("Status Change: " + this.status);
       $(this).trigger('connectionSuccessful');
       return this.addMessageEventHandlers();
     };
 
-    WebMidi.prototype.onConnectFailure = function() {
+    MidiIo.prototype.onConnectFailure = function() {
       this.status = this.Status.ConnectionFailed;
       this.log("Status Change: " + this.status);
       return $(this).trigger('connectionFailed');
     };
 
-    WebMidi.prototype.addMessageEventHandlers = function() {
+    MidiIo.prototype.addMessageEventHandlers = function() {
       var inputs;
       inputs = this.zmidi.getInChannels();
       if (inputs.length === 0) {
@@ -114,7 +114,7 @@
       })(this));
     };
 
-    WebMidi.prototype.onEventFired = function(event) {
+    MidiIo.prototype.onEventFired = function(event) {
       var note, pitch;
       switch (event.type) {
         case this.zmidiEvent.NOTE_ON:
@@ -131,10 +131,10 @@
       }
     };
 
-    return WebMidi;
+    return MidiIo;
 
   })();
 
 }).call(this);
 
-//# sourceMappingURL=webmidi.js.map
+//# sourceMappingURL=midiio.js.map

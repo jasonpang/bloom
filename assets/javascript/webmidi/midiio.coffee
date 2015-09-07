@@ -1,6 +1,6 @@
-class @WebMidi
+class @MidiIo
 
-  WebMidi::Status = {
+  MidiIo::Status = {
     Initializing: 'Initializing MIDI...',
     NotSupported: 'Web MIDI is not supported in this browser.',
     ConnectionFailed: 'Could not connect to MIDI peripherals.',
@@ -8,7 +8,7 @@ class @WebMidi
     Receiving: 'Actively receiving MIDI messages.'
   }
 
-  WebMidi::EventType = {
+  MidiIo::EventType = {
     Undefined: 'Undefined Event',
     NoteOn: 'Note On',
     NoteOff: 'Note Off',
@@ -17,19 +17,19 @@ class @WebMidi
     SysEx: 'SysEx',
   }
 
-  class WebMidi::Event
+  class MidiIo::Event
     constructor: (type, value, note, octave, velocity) ->
-      @type = type ? WebMidi::EventType.Undefined
+      @type = type ? MidiIo::EventType.Undefined
       @value = value ? -1
       @note = note ? ''
       @octave = octave ? -1
       @velocity = velocity ? -1
-      @at = window.performance.now()
+      @at = window.performance.timing.navigationStart + window.performance.now()
 
     toString: ->
-      if @type == WebMidi::EventType.NoteOn || @type == WebMidi::EventType.NoteOff
+      if @type == MidiIo::EventType.NoteOn || @type == MidiIo::EventType.NoteOff
         return "#{@type}: #{@note}#{@octave} (#{@value}), Velocity #{@velocity} @ #{@at} ms"
-      else if @type == WebMidi::EventType.CC
+      else if @type == MidiIo::EventType.CC
         return "#{@type}: #{@value} @ #{@at}"
       else
         return super.toString()
