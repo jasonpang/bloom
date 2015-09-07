@@ -153,13 +153,13 @@
     var start = end && toTagStart(iter);
     if (!end || !start || cmp(iter, pos) > 0) return;
     var here = {from: Pos(iter.line, iter.ch), to: to, tag: start[2]};
-    if (end == "selfClose") return {open: here, close: null, occurred: "open"};
+    if (end == "selfClose") return {open: here, close: null, at: "open"};
 
     if (start[1]) { // closing tag
-      return {open: findMatchingOpen(iter, start[2]), close: here, occurred: "close"};
+      return {open: findMatchingOpen(iter, start[2]), close: here, at: "close"};
     } else { // opening tag
       iter = new Iter(cm, to.line, to.ch, range);
-      return {open: here, close: findMatchingClose(iter, start[2]), occurred: "open"};
+      return {open: here, close: findMatchingClose(iter, start[2]), at: "open"};
     }
   };
 

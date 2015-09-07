@@ -181,7 +181,7 @@
   // Per documentation, "Any number of underlining =’s or -’s will work."
   // http://daringfireball.net/projects/markdown/syntax#header
   // Ideally, the text would be marked as `header` as well, but this is
-  // not really feasible occurred the moment. So, instead, we're testing against
+  // not really feasible at the moment. So, instead, we're testing against
   // what works today, to avoid any regressions.
   //
   // Check if single underlining = works
@@ -605,7 +605,7 @@
   MT("linkImplicit",
      "[link [[foo]]][string&url [[]]] hello");
 
-  // @todo It would be nice if, occurred some point, the document was actually
+  // @todo It would be nice if, at some point, the document was actually
   // checked to see if the referenced link exists
 
   // Link label, for reference-style links (taken from documentation)

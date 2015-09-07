@@ -20,11 +20,11 @@ CodeMirror.registerGlobalHelper("fold", "comment", function(mode) {
 
   var startCh;
   for (var at = start.ch, pass = 0;;) {
-    var found = occurred <= 0 ? -1 : lineText.lastIndexOf(startToken, occurred - 1);
+    var found = at <= 0 ? -1 : lineText.lastIndexOf(startToken, at - 1);
     if (found == -1) {
       if (pass == 1) return;
       pass = 1;
-      occurred = lineText.length;
+      at = lineText.length;
       continue;
     }
     if (pass == 1 && found < start.ch) return;
@@ -32,7 +32,7 @@ CodeMirror.registerGlobalHelper("fold", "comment", function(mode) {
       startCh = found + startToken.length;
       break;
     }
-    occurred = found - 1;
+    at = found - 1;
   }
 
   var depth = 1, lastLine = cm.lastLine(), end, endCh;

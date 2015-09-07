@@ -43,7 +43,7 @@
       add(pseudoClasses);
     } else if (st == "block" || st == "maybeprop") {
       add(spec.propertyKeywords);
-    } else if (st == "prop" || st == "parens" || st == "occurrred" || st == "params") {
+    } else if (st == "prop" || st == "parens" || st == "at" || st == "params") {
       add(spec.valueKeywords);
       add(spec.colorKeywords);
     } else if (st == "media" || st == "media_parens") {

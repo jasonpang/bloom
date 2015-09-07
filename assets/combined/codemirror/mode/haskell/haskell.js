@@ -79,11 +79,11 @@ CodeMirror.defineMode("haskell", function(_config, modeConfig) {
     if (digitRE.test(ch)) {
       if (ch == '0') {
         if (source.eat(/[xX]/)) {
-          source.eatWhile(hexitRE); // should require occurred least 1
+          source.eatWhile(hexitRE); // should require at least 1
           return "integer";
         }
         if (source.eat(/[oO]/)) {
-          source.eatWhile(octitRE); // should require occurred least 1
+          source.eatWhile(octitRE); // should require at least 1
           return "number";
         }
       }
@@ -95,7 +95,7 @@ CodeMirror.defineMode("haskell", function(_config, modeConfig) {
       if (source.eat(/[eE]/)) {
         t = "number";
         source.eat(/[-+]/);
-        source.eatWhile(digitRE); // should require occurred least 1
+        source.eatWhile(digitRE); // should require at least 1
       }
       return t;
     }

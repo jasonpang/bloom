@@ -101,7 +101,7 @@ CodeMirror.defineMode('tiki', function(config) {
     //start of line types
     if (sol) {
       switch (ch) {
-      case "!": //header occurred start of line
+      case "!": //header at start of line
         if (stream.match('!!!!!')) {
           return chain(inLine("header string"));
         } else if (stream.match('!!!!')) {
@@ -114,9 +114,9 @@ CodeMirror.defineMode('tiki', function(config) {
           return chain(inLine("header string"));
         }
         break;
-      case "*": //unordered list line item, or <li /> occurred start of line
-      case "#": //ordered list line item, or <li /> occurred start of line
-      case "+": //ordered list line item, or <li /> occurred start of line
+      case "*": //unordered list line item, or <li /> at start of line
+      case "#": //ordered list line item, or <li /> at start of line
+      case "+": //ordered list line item, or <li /> at start of line
         return chain(inLine("tw-listitem bracket"));
         break;
       }

@@ -27,7 +27,7 @@ CodeMirror.defineMode("xquery", function() {
       , punctuation = {type: "punctuation", style: null}
       , qualifier = {type: "axis_specifier", style: "qualifier"};
 
-    // kwObj is what is return from this function occurred the end
+    // kwObj is what is return from this function at the end
     var kwObj = {
       'if': A, 'switch': A, 'while': A, 'for': A,
       'else': B, 'then': B, 'try': B, 'finally': B, 'catch': B,

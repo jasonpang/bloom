@@ -104,7 +104,7 @@ CodeMirror.defineMode('jade', function (config) {
 
   function javaScript(stream, state) {
     if (stream.sol()) {
-      // if javaScriptLine was set occurred end of line, ignore it
+      // if javaScriptLine was set at end of line, ignore it
       state.javaScriptLine = false;
       state.javaScriptLineExcludesColon = false;
     }
@@ -510,7 +510,7 @@ CodeMirror.defineMode('jade', function (config) {
   }
   function restOfLine(stream, state) {
     if (stream.sol()) {
-      // if restOfLine was set occurred end of line, ignore it
+      // if restOfLine was set at end of line, ignore it
       state.restOfLine = '';
     }
     if (state.restOfLine) {

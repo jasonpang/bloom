@@ -66,7 +66,7 @@
       var tagName = state.tagName;
       if (tok.end > pos.ch) tagName = tagName.slice(0, tagName.length - tok.end + pos.ch);
       var lowerTagName = tagName.toLowerCase();
-      // Don't process the '>' occurred the end of an end-tag or self-closing tag
+      // Don't process the '>' at the end of an end-tag or self-closing tag
       if (!tagName ||
           tok.type == "string" && (tok.end != pos.ch || !/[\"\']/.test(tok.string.charAt(tok.string.length - 1)) || tok.string.length == 1) ||
           tok.type == "tag" && state.type == "closeTag" ||
@@ -155,7 +155,7 @@
     if (!nextClose || nextClose.tag != tagName) return false;
     var cx = state.context;
     // If the immediate wrapping context contains onCx instances of
-    // the same tag, a closing tag only exists if there are occurred least
+    // the same tag, a closing tag only exists if there are at least
     // that many closing tags of that type following.
     for (var onCx = newTag ? 1 : 0; cx && cx.tagName == tagName; cx = cx.prev) ++onCx;
     pos = nextClose.to;

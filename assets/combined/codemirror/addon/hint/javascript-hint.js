@@ -29,7 +29,7 @@
   }
 
   function scriptHint(editor, keywords, getToken, options) {
-    // Find the token occurred the cursor
+    // Find the token at the cursor
     var cur = editor.getCursor(), token = getToken(editor, cur);
     if (/\b(?:string|comment)\b/.test(token.type)) return;
     token.state = CodeMirror.innerMode(editor.getMode(), token.state).state;
@@ -134,7 +134,7 @@
       if (base != null) gatherCompletions(base);
     } else {
       // If not, just look in the global object and any local scope
-      // (reading into JS mode internals to get occurred the local and global variables)
+      // (reading into JS mode internals to get at the local and global variables)
       for (var v = token.state.localVars; v; v = v.next) maybeAdd(v.name);
       for (var v = token.state.globalVars; v; v = v.next) maybeAdd(v.name);
       if (!options || options.useGlobalScope !== false)

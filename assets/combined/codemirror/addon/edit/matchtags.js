@@ -41,10 +41,10 @@
       var match = CodeMirror.findMatchingTag(cm, cur, range);
       if (!match) return;
       if (cm.state.matchBothTags) {
-        var hit = match.occurred == "open" ? match.open : match.close;
+        var hit = match.at == "open" ? match.open : match.close;
         if (hit) cm.state.tagHit = cm.markText(hit.from, hit.to, {className: "CodeMirror-matchingtag"});
       }
-      var other = match.occurred == "close" ? match.open : match.close;
+      var other = match.at == "close" ? match.open : match.close;
       if (other)
         cm.state.tagOther = cm.markText(other.from, other.to, {className: "CodeMirror-matchingtag"});
       else
@@ -59,7 +59,7 @@
   CodeMirror.commands.toMatchingTag = function(cm) {
     var found = CodeMirror.findMatchingTag(cm, cm.getCursor());
     if (found) {
-      var other = found.occurred == "close" ? found.open : found.close;
+      var other = found.at == "close" ? found.open : found.close;
       if (other) cm.extendSelection(other.to, other.from);
     }
   };
