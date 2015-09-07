@@ -17,6 +17,7 @@ window.track = new MidiTrack('Test Track', 4, 4, 120, {})
 
 window.trackProcessor = new MidiTrackProcessor({
   firstNoteTimestampBecomesTrackStartTimestamp: true,
+  quantize: false,
   quantizeLimit: 16 # 16th notes
 })
 

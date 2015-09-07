@@ -26,11 +26,33 @@
           track.orderedTimestampList[index] -= timestampDelta;
         }
       }
-      this.quantizeLengths();
+      if (this.options.quantize) {
+        this.quantizeLengths();
+      }
+      this.calculateNoteDurations(track);
       return track;
     };
 
-    MidiTrackProcessor.prototype.quantizeLengths = function(track) {};
+    MidiTrackProcessor.prototype.calculateNoteDurations = function(track) {
+      var beatLength, beatType, i, index, len, noteEvent, noteType, ref, results, timestamp;
+      beatLength = 60 / track.bpm;
+      beatType = 4;
+      ref = track.orderedTimestampList;
+      results = [];
+      for (index = i = 0, len = ref.length; i < len; index = ++i) {
+        timestamp = ref[index];
+        noteEvent = track.notes[timestamp];
+        noteType = beatType * beatLength / (noteEvent.duration / 1000);
+        noteEvent.duration_notation = noteType;
+        results.push(console.log(noteEvent.duration_notation));
+      }
+      return results;
+    };
+
+    MidiTrackProcessor.prototype.quantizeLengths = function(track) {
+      var beatLength;
+      return beatLength = 60 / this.options.bpm;
+    };
 
     return MidiTrackProcessor;
 

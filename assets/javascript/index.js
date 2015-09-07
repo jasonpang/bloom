@@ -21,6 +21,7 @@
 
   window.trackProcessor = new MidiTrackProcessor({
     firstNoteTimestampBecomesTrackStartTimestamp: true,
+    quantize: false,
     quantizeLimit: 16
   });
 
